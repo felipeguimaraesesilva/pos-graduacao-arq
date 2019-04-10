@@ -47,12 +47,12 @@ public class OrderController {
 		return response;
 	}
 
-	@RequestMapping(value = "/search/status/done", method = RequestMethod.GET)
+	@RequestMapping(value = "/status/done", method = RequestMethod.GET)
 	public ResponseOrderDTO getStatusDone() {
 		ResponseOrderDTO response = new ResponseOrderDTO();
 
 		List<ItemOrderDTO> resultList = orderMemory.getOrderMemory().getItens().stream()
-				.filter(i -> i.getStatus().toUpperCase().contains("concluido")).collect(Collectors.toList());
+				.filter(i -> i.getStatus().toLowerCase().contains("concluido")).collect(Collectors.toList());
 
 		OrderDTO basketDTO = new OrderDTO();
 		basketDTO.setItens(resultList);
