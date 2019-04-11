@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,15 +24,14 @@ public class OrderController {
 	OrderRepository orderMemory = new OrderRepository();
 
 	@GetMapping
-	public ResponseOrderDTO getOrders() {
+	public ResponseEntity<ResponseOrderDTO> getOrders() {
 		ResponseOrderDTO response = new ResponseOrderDTO();
 		response.setBasketDTO(orderMemory.getOrderMemory());
-		response.setHttpStatus(HttpStatus.OK);
-		return response;
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseOrderDTO createNewOrder(@RequestBody OrderDTO orderRequest) {
+	public ResponseEntity<ResponseOrderDTO> createNewOrder(@RequestBody OrderDTO orderRequest) {
 		ResponseOrderDTO response = new ResponseOrderDTO();
 
 		if (orderRequest != null && orderRequest.getItens() != null) {
@@ -39,16 +39,15 @@ public class OrderController {
 			orderMemory.getOrderMemory().getItens().addAll(orderRequest.getItens());
 
 			response.setBasketDTO(orderMemory.getOrderMemory());
-			response.setHttpStatus(HttpStatus.CREATED);
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else {
-			response.setHttpStatus(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 
-		return response;
 	}
 
 	@RequestMapping(value = "/status/done", method = RequestMethod.GET)
-	public ResponseOrderDTO getStatusDone() {
+	public ResponseEntity<ResponseOrderDTO> getStatusDone() {
 		ResponseOrderDTO response = new ResponseOrderDTO();
 
 		List<ItemOrderDTO> resultList = orderMemory.getOrderMemory().getItens().stream()
@@ -58,8 +57,8 @@ public class OrderController {
 		basketDTO.setItens(resultList);
 
 		response.setBasketDTO(basketDTO);
-		response.setHttpStatus(HttpStatus.OK);
-		return response;
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
 	}
 
 }

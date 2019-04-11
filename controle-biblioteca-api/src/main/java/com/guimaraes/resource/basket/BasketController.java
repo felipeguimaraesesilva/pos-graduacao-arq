@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,31 +25,29 @@ public class BasketController {
 	BasketRepository basketRepository = new BasketRepository();
 
 	@GetMapping
-	public ResponseBasketDTO getBasket() {
+	public ResponseEntity<ResponseBasketDTO> getBasket() {
 		ResponseBasketDTO response = new ResponseBasketDTO();
 		response.setBasketDTO(basketRepository.getBasketMemory());
-		response.setHttpStatus(HttpStatus.OK);
-		return response;
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseBasketDTO createNewItemOnBasket(@RequestBody BasketDTO basketRequest) {
+	public ResponseEntity<ResponseBasketDTO> createNewItemOnBasket(@RequestBody BasketDTO basketRequest) {
 		ResponseBasketDTO response = new ResponseBasketDTO();
 
 		if (basketRequest != null && basketRequest.getItens() != null) {
 			basketRepository.getBasketMemory().getItens().addAll(basketRequest.getItens());
 
 			response.setBasketDTO(basketRepository.getBasketMemory());
-			response.setHttpStatus(HttpStatus.CREATED);
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else {
-			response.setHttpStatus(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 
-		return response;
 	}
 
 	@DeleteMapping(value = "item/{itemOid}")
-	public ResponseBasketDTO deletetemOnBasket(@PathVariable("itemOid") String itemOid) {
+	public ResponseEntity<ResponseBasketDTO> deletetemOnBasket(@PathVariable("itemOid") String itemOid) {
 		ResponseBasketDTO response = new ResponseBasketDTO();
 
 		if (itemOid != null) {
@@ -57,12 +56,11 @@ public class BasketController {
 
 			basketRepository.getBasketMemory().setItens(newList);
 			response.setBasketDTO(basketRepository.getBasketMemory());
-			response.setHttpStatus(HttpStatus.OK);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
-			response.setHttpStatus(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 
-		return response;
 	}
 
 }
