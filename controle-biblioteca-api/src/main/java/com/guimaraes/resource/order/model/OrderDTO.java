@@ -12,6 +12,9 @@ public class OrderDTO extends BaseRequestDTO {
 
 	private static final long serialVersionUID = 5853939616400431325L;
 	private int count;
+	private int offset;
+	private int limit;
+	private int total;
 	private List<ItemOrderDTO> itens;
 
 	public OrderDTO() {

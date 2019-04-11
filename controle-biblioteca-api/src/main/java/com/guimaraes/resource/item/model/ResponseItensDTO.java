@@ -12,6 +12,9 @@ public class ResponseItensDTO extends BaseResponseDTO {
 	private static final long serialVersionUID = -4306968722350182574L;
 
 	private int count;
+	private int offset;
+	private int limit;
+	private int total;
 	private List<ItemDTO> itens;
 
 	public void setItens(List<ItemDTO> itens) {
